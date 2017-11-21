@@ -11,7 +11,8 @@ Author:     Pontus Stenetorp <pontus stenetorp se>
 Version:    2011-05-09
 '''
 
-from re import compile as re_compile
+from re import compile as re_compile 
+from re import match as re_match
 from re import DOTALL, VERBOSE
 from os.path import join as path_join
 from os.path import dirname
@@ -117,18 +118,35 @@ def _refine_split(offsets, original_text):
     new_offsets.sort()
     return new_offsets
 
-def _sentence_boundary_gen(text, regex):
+def _sentence_boundary_gen(text, regex, turntimes=True):
     for match in regex.finditer(text):
-        yield match.span()
+	mspan = match.span()
+	## In Callhome this will be start and endtimes of the turn
+	if turntimes: 
+		currspan = text[mspan[0]:mspan[1]]	
+		if re_match(r'^[0-9]', text):
+			firstword = 0.0 
+			secondword = 1.0
+		try: 
+			firstword = float(currspan.split(" ")[0])
+			secondword = float(currspan.split(" ")[1])
+		except:
+        		firstword = 0.0	
+			secondword = 1.0
+
+		yield mspan, [firstword, secondword]
+	else:
+        	yield mspan, [0.0,1.0] 
+	
 
 def regex_sentence_boundary_gen(text):
     for o in _refine_split([_o for _o in _sentence_boundary_gen(
                 text, SENTENCE_END_REGEX)], text):
         yield o
 
-def newline_sentence_boundary_gen(text):
-    for o in _sentence_boundary_gen(text, SENTENCE_END_NEWLINE_REGEX):
-        yield o
+def newline_sentence_boundary_gen(text, turntimes=True):
+    for o, firstword  in _sentence_boundary_gen(text, SENTENCE_END_NEWLINE_REGEX, turntimes=turntimes):
+        yield o, firstword
 
 if __name__ == '__main__':
     from sys import argv
