@@ -114,6 +114,22 @@ var AnnotatorUI = (function($, window, undefined) {
       var onKeyDown = function(evt) {
         var code = evt.which;
 
+				if (code === $.ui.keyCode.TAB) {
+					var audioplayer = $('#audio_player')[0];
+					console.log("audio", audioplayer.paused);
+					if(!audioplayer.paused) {
+						console.log("pause audio now");
+						audioplayer.pause();
+					} else {
+						console.log("play now");
+						audioplayer.play();
+					}				
+
+					return;
+			}
+																								          //dispatcher.post('messages', [false]);
+																													//          return;
+
         if (code === $.ui.keyCode.ESCAPE) {
           setTypeLock(false);
           stopArcDrag();
@@ -183,9 +199,22 @@ var AnnotatorUI = (function($, window, undefined) {
 
         var target = $(evt.target);
         var id;
-
+		
+			  console.log("dblclick", target);
+				if (id = 	target.attr('data-sent')) {
+					console.log("data-sent dblclick", target);
+			
+					// HERE's where we would put the call to play audio	
+					var audioplayer = $('#audio_player')[0]
+					audioplayer.play()
+					if (starttime = target.attr('sentstart')) {
+						console.log("starttime", starttime);
+						// need to test this with apache
+						audioplayer.currentTime = starttime;
+					}
         // do we edit an arc?
-        if (id = target.attr('data-arc-role')) {
+				} else if (id = target.attr('data-arc-role')) {
+
           // TODO
           clearSelection();
           var originSpanId = target.attr('data-arc-origin');
