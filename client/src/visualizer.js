@@ -138,6 +138,7 @@ var Visualizer = (function($, window, undefined) {
       // this.annotatorNotes = undefined;
     };
 
+		// A chunk is every word in a sentence?
     var Chunk = function(index, text, from, to, space, spans) {
       this.index = index;
       this.text = text;
@@ -145,6 +146,7 @@ var Visualizer = (function($, window, undefined) {
       this.to = to;
       this.space = space;
       this.fragments = [];
+			//this.starttime = text.split(" ")[0]
       // this.sentence = undefined;
       // this.group = undefined;
       // this.highlightGroup = undefined;
@@ -254,6 +256,7 @@ var Visualizer = (function($, window, undefined) {
       $.each([
           'attributes',
           'comments',
+          'sentence_times',
           'entities',
           'equivs',
           'events',
@@ -811,6 +814,7 @@ var Visualizer = (function($, window, undefined) {
         var numChunks = chunkNo;
 
         // find sentence boundaries in relation to chunks
+				// HERE
         chunkNo = 0;
         var sentenceNo = 0;
         var pastFirst = false;
@@ -2749,12 +2753,14 @@ Util.profileStart('rows');
 
             // Render sentence number as a link
             var text;
+            var sentstart  = sourceData.sentence_starts[row.sentence-1];
+            var sentend  = sourceData.sentence_ends[row.sentence-1];
             if (rtlmode) {
               text = svg.text(link, canvasWidth - sentNumMargin + Configuration.visual.margin.x, y - rowPadding,
-                  '' + row.sentence, { 'data-sent': row.sentence });
+                  '' + row.sentence, { 'data-sent': row.sentence, 'sentstart': sentstart, 'sentend': sentend });
             } else {
               text = svg.text(link, sentNumMargin - Configuration.visual.margin.x, y - rowPadding,
-                  '' + row.sentence, { 'data-sent': row.sentence });
+                  '' + row.sentence, { 'data-sent': row.sentence, 'sentstart': sentstart, 'sentend': sentend });
             }
 
             var sentComment = data.sentComment[row.sentence];
