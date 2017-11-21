@@ -304,6 +304,13 @@ div.scroll_wrapper_upper div.scroller {
   border: none;
 }
 
+#audio_name {
+  margin-right: 100px;
+}
+#audio_name input {
+  width: 100%;
+  border: none;
+}
 /*
 #logo {
   float:right;
