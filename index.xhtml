@@ -129,6 +129,16 @@
             <!--<input id="undo_button" type="button" class="login" value="Undo" tabindex="-1"/>-->
             <input id="options_button" type="button" value="Options" tabindex="-1" title="Set Visual, Annotation and Network Options"/>
           </div>
+
+					<div id="audio_name">
+						<!-- we get an error here SimpleHTTPServer, apparently it's ok with apache -->
+						<audio id="audio_player" controls="controls" style="width: 100%">
+							<source id="srcaudio" src="" type="audio/mpeg">Your browser is bad!</source>
+						</audio>
+						<br/>
+						<input readonly="readonly" class="ui-widget-header"/>
+					</div>
+
           <!-- Dummy span, fixes visual glitch (issue #535). TODO: better fix -->
           <span class="document_edit_time unselectable">&nbsp;</span>
           <div id="document_mtime" class="document_edit_time unselectable">&nbsp;</div>
