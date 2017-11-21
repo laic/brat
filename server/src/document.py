@@ -663,7 +663,7 @@ def _enrich_json_with_text(j_dic, txt_file_path, raw_text=None):
     ssplitter = options_get_ssplitter(dirname(txt_file_path))
     if ssplitter == 'newline':
         from ssplit import newline_sentence_boundary_gen
-        ss_offset_gen = newline_sentence_boundary_gen
+        ss_offset_gen = lambda x: newline_sentence_boundary_gen(x, turntimes=True)
     elif ssplitter == 'regex':
         from ssplit import regex_sentence_boundary_gen
         ss_offset_gen = regex_sentence_boundary_gen
@@ -672,7 +672,10 @@ def _enrich_json_with_text(j_dic, txt_file_path, raw_text=None):
                 ', reverting to newline sentence splitting.')
         from ssplit import newline_sentence_boundary_gen
         ss_offset_gen = newline_sentence_boundary_gen
-    j_dic['sentence_offsets'] = [o for o in ss_offset_gen(text)]
+
+    j_dic['sentence_offsets'] = [o for o, ttimes in ss_offset_gen(text)]
+	j_dic['sentence_starts'] = [ ttimes[0] for _, ttimes in ss_offset_gen(text)]
+	j_dic['sentence_ends'] = [ ttimes[1] for _, ttimes in ss_offset_gen(text)]
 
     return True
 
