@@ -195,6 +195,13 @@ def _safe_serve(params, client_ip, client_hostname, cookie_data):
 
         # Dispatch the request
         json_dic = dispatch(http_args, client_ip, client_hostname)
+
+        print >> stderr, json_dic.keys()
+		if 'comments' in json_dic.keys():
+			#print >> stderr, json_dic['sentence_times']
+			print >> stderr, len(json_dic['sentence_starts']), len(json_dic['sentence_offsets'])
+			#print >> stderr, json_dic['sentence_offsets']
+
     except ProtocolError, e:
         # Internal error, only reported to client not to log
         json_dic = {}
@@ -220,6 +227,7 @@ def _safe_serve(params, client_ip, client_hostname, cookie_data):
 
     if response_is_JSON:
         response_data = ((JSON_HDR, ), dumps(Messager.output_json(json_dic)))
+
 
     return (cookie_hdrs, response_data)
 
