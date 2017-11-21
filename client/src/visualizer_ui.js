@@ -1478,11 +1478,22 @@ var VisualizerUI = (function($, window, undefined) {
 
       var onKeyDown = function(evt) {
         var code = evt.which;
+				
+				// TAB to stop and start audio
+       // if (code === $.ui.keyCode.TAB) {
+				//	var audioplayer = $('#audio_player')[0];
+			//		console.log("audio", audioplayer.paused);
+			//		if(!audioplayer.paused) {
+			//			console.log("pause audio now");
+			//			audioplayer.pause();
+			//		} else { 
+			//			console.log("play now");
+			//			audioplayer.play();
+			//		}
 
-        if (code === $.ui.keyCode.ESCAPE) {
-          dispatcher.post('messages', [false]);
-          return;
-        }
+       //   //dispatcher.post('messages', [false]);
+       //   return;
+       // }
 
         if (currentForm) {
           if (code === $.ui.keyCode.ENTER) {
@@ -1507,7 +1518,7 @@ var VisualizerUI = (function($, window, undefined) {
           return;
         }
 
-        if (code === $.ui.keyCode.TAB) {
+        if (code === $.ui.keyCode.ESCAPE) {
           showFileBrowser();
           return false;
         } else if (code == $.ui.keyCode.LEFT) {
@@ -1724,7 +1735,7 @@ var VisualizerUI = (function($, window, undefined) {
         if (mtime) {
           // we're getting seconds and need milliseconds
           //$('#document_ctime').text("Created: " + Annotator.formatTime(1000 * sourceData.ctime)).css("display", "inline");
-          $('#document_mtime').text("Last modified: " + Util.formatTimeAgo(1000 * mtime)).show();
+          $('#document_mtime').text("Last modified: " + Util.formatTimeAgo(1000 * mtime)).css("display","inline").show();
         } else {
           //$('#document_ctime').css("display", "none");
           $('#document_mtime').hide();
@@ -1766,15 +1777,24 @@ var VisualizerUI = (function($, window, undefined) {
           $cmpLink.button();
         }
           
-        $docName = $('#document_name input').val(coll + doc);
-        var docName = $docName[0];
+        $docname = $('#document_name input').val(coll + doc);
+        var docname = $docname[0];
         // TODO do this on resize, as well
         // scroll the document name to the right, so the name is visible
         // (even if the collection name isn't, fully)
-        docName.scrollLeft = docName.scrollWidth;
+        docname.scrollleft = docname.scrollwidth;
+
+        $audioname = $('#audio_name input').val("data" + coll + doc + ".mp3");
+        var audioname = $audioname[0];
+
+        var audioplayer = $('#audio_player');
+				$('#srcaudio').attr("src", "data" +coll + doc + ".mp3");
+			  audioplayer.load()
+
 
         $('#document_mtime').hide();
         invalidateSavedSVG();
+
       };
 
       var slideToggle = function(el, show, autoHeight, bottom) {
@@ -1919,6 +1939,8 @@ var VisualizerUI = (function($, window, undefined) {
         if (user && annotationAvailable) return;
         var target = $(evt.target);
         var id;
+
+	
         if (id = target.attr('data-span-id')) {
           window.getSelection().removeAllRanges();
           var span = data.spans[id];
