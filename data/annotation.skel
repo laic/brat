@@ -1,0 +1,22 @@
+## Annotation configuration for topic and stance 
+
+[entities]
+
+# Definition of entities.
+
+Topic
+
+[relations]
+
+<OVERLAP> Arg1:<ENTITY>, Arg2:<ENTITY>, <OVL-TYPE>:<ANY>
+
+[events]
+
+## No events
+
+
+[attributes]
+
+## Stances
+A:Positive   Arg:<ENTITY>, Value:Very_positive|Positive|Neutral|Quite_negative|Very_negative
+A:Surprised   Arg:<ENTITY>, Value:Very_surprised|Surprised|Neutral|Not_surprised|Not_at_all_surprised
