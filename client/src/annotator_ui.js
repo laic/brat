@@ -114,21 +114,21 @@ var AnnotatorUI = (function($, window, undefined) {
       var onKeyDown = function(evt) {
         var code = evt.which;
 
-				if (code === $.ui.keyCode.TAB) {
-					var audioplayer = $('#audio_player')[0];
-					console.log("audio", audioplayer.paused);
-					if(!audioplayer.paused) {
-						console.log("pause audio now");
-						audioplayer.pause();
-					} else {
-						console.log("play now");
-						audioplayer.play();
-					}				
+	if (code === $.ui.keyCode.TAB) {
+		var audioplayer = $('#audio_player')[0];
+		console.log("audio", audioplayer.paused);
+		if(!audioplayer.paused) {
+			console.log("pause audio now");
+			audioplayer.pause();
+		} else {
+			console.log("play now");
+			audioplayer.play();
+		}				
 
-					return;
-			}
-																								          //dispatcher.post('messages', [false]);
-																													//          return;
+		return;
+	}
+	//dispatcher.post('messages', [false]);
+	//          return;
 
         if (code === $.ui.keyCode.ESCAPE) {
           setTypeLock(false);
@@ -200,20 +200,19 @@ var AnnotatorUI = (function($, window, undefined) {
         var target = $(evt.target);
         var id;
 		
-			  console.log("dblclick", target);
-				if (id = 	target.attr('data-sent')) {
-					console.log("data-sent dblclick", target);
-			
-					// HERE's where we would put the call to play audio	
-					var audioplayer = $('#audio_player')[0]
-					audioplayer.play()
-					if (starttime = target.attr('sentstart')) {
-						console.log("starttime", starttime);
-						// need to test this with apache
-						audioplayer.currentTime = starttime;
-					}
+	console.log("dblclick", target);
+	if (id = target.attr('data-sent')) {
+		console.log("data-sent dblclick", target);
+		// HERE's where we would put the call to play audio	
+		var audioplayer = $('#audio_player')[0]
+		audioplayer.play()
+		if (starttime = target.attr('sentstart')) {
+			console.log("starttime", starttime);
+			// need to test this with apache
+			audioplayer.currentTime = starttime;
+		}
         // do we edit an arc?
-				} else if (id = target.attr('data-arc-role')) {
+	} else if (id = target.attr('data-arc-role')) {
 
           // TODO
           clearSelection();
@@ -678,6 +677,14 @@ var AnnotatorUI = (function($, window, undefined) {
           $('#span_entity_section').show().
             removeClass('wrapper_half_left').
             addClass('wrapper_full_width');
+
+          //$('#span_entity_section').show().
+          //  removeClass('wrapper_half_left').
+          //  addClass('wrapper_full_width');
+          //$('#span_event_section').show().
+          //  removeClass('wrapper_full_width').
+          //  addClass('wrapper_half_right');
+
         } else if (hideFrame == 'entity') {
           $('#span_entity_section').hide()
           $('#span_event_section').show().
@@ -944,6 +951,13 @@ var AnnotatorUI = (function($, window, undefined) {
             $('#event_types').
               removeClass('scroll_wrapper_upper').
               addClass('scroll_wrapper_full');
+
+            //$('#event_attributes').show();
+            //$('#event_attribute_label').show();
+            //$('#event_types').
+             // removeClass('scroll_wrapper_full').
+              //addClass('scroll_wrapper_upper');
+
           }
           if (entityAttrCount > 0) {
             $('#entity_attributes').show();
@@ -1915,9 +1929,13 @@ var AnnotatorUI = (function($, window, undefined) {
       };
 
       var addSpanTypesToDivInner = function($parent, types, category) {
-        if (!types) return;
-
+        if (!types) {
+		console.log("No types", category)
+		return;
+	}
+	console.log("types", category, types)
         $.each(types, function(typeNo, type) {
+	  console.log("Adding types", category)
           if (type === null) {
             $parent.append('<hr/>');
           } else {
@@ -1984,13 +2002,19 @@ var AnnotatorUI = (function($, window, undefined) {
         addSpanTypesToDivInner($scroller, types);
       };
       var addAttributeTypesToDiv = function($top, types, category) {
+
+	console.log("attr types", category, types)
+
         $.each(types, function(attrNo, attr) {
           var escapedType = Util.escapeQuotes(attr.type);
           var attrId = category+'_attr_'+escapedType;
+	  console.log('attrId', attrId)
           var $span = $('<span class="attribute_type_label"/>').appendTo($top);
           if (attr.unused) {
+	    console.log('attr.unused')
             $('<input type="hidden" id="'+attrId+'" value=""/>').appendTo($span);
           } else if (attr.bool) {
+	    console.log('attr.bool')
             var escapedName = Util.escapeQuotes(attr.name);
             var $input = $('<input type="checkbox" id="'+attrId+
                            '" value="' + escapedType + 
@@ -2002,19 +2026,25 @@ var AnnotatorUI = (function($, window, undefined) {
             $input.button();
             $input.change(onBooleanAttrChange);
           } else {
+	    // HERE attribute labels
             // var $div = $('<div class="ui-button ui-button-text-only attribute_type_label"/>');
-            $span.text(attr.name);
-            $span.append(':&#160;');
+	    // get around no spaces in config file constraint
+	    attrname = attr.name.replace("_", ":");
+            $span.text(attrname);
+            $span.append(':&#160;&#160;&#160;');
             var $select = $('<select id="'+attrId+'" class="ui-widget ui-state-default ui-button-text" category="' + category + '"/>');
             var $option = $('<option class="ui-state-default" value=""/>').text('?');
             $select.append($option);
             $.each(attr.values, function(valueNo, value) {
-              $option = $('<option class="ui-state-active" value="' + Util.escapeQuotes(value.name) + '"/>').text(value.name);
+	      valname  = value.name.replace("_", " ");
+	      console.log("attrname", attrname, valname);
+              $option = $('<option class="ui-state-active" value="' + Util.escapeQuotes(valname) + '"/>').text(valname);
               $select.append($option);
             });
             $span.append($select);
             $select.combobox();
             $select.change(onMultiAttrChange);
+            $span.append('<br/><br/>');
           }
         });
       }
@@ -2068,6 +2098,7 @@ var AnnotatorUI = (function($, window, undefined) {
       var onBooleanAttrChange = function(evt) {
         if (evt.type == 'change') { // ignore the click event on the UI element
           var attrCategory = evt.target.getAttribute('category');
+	  console.log('onBooleanAttrChange', attrCategory);
           setSpanTypeSelectability(attrCategory);
           updateCheckbox($(evt.target));
         }
@@ -2080,16 +2111,22 @@ var AnnotatorUI = (function($, window, undefined) {
 
         // fill in entity and event types
         var $entityScroller = $('#entity_types div.scroller').empty();
+	console.log('add entities')
         addSpanTypesToDivInner($entityScroller, response.entity_types, 'entity');
         var $eventScroller = $('#event_types div.scroller').empty();
+	console.log('add events')
         addSpanTypesToDivInner($eventScroller, response.event_types, 'event');
 
         // fill in attributes
+	console.log('add entities attr')
         var $entattrs = $('#entity_attributes div.scroller').empty();
         addAttributeTypesToDiv($entattrs, entityAttributeTypes, 'entity');
 
+	console.log('add event attrs')
         var $eveattrs = $('#event_attributes div.scroller').empty();
         addAttributeTypesToDiv($eveattrs, eventAttributeTypes, 'event');
+	//eventAttributeTypes = entityAttributeTypes;
+        //addAttributeTypesToDiv($eveattrs, entityAttributeTypes, 'entity2');
 
         // fill search options in span dialog
         searchConfig = response.search_config;
@@ -2292,11 +2329,14 @@ var AnnotatorUI = (function($, window, undefined) {
 
       // returns attributes that are valid for the selected type in
       // the span dialog
+
       var spanAttributes = function(typeRadio) {
         typeRadio = typeRadio || $('#span_form input:radio:checked');
         var attributes = {};
         var attributeTypes;
         var category = typeRadio.attr('category');
+	//console.log('spanAttributes', category, entityAttributeTypes); 
+	//console.log('spanAttributes typeradio', typeRadio); 
         if (category == 'entity') {
           attributeTypes = entityAttributeTypes;
         } else if (category == 'event') {
@@ -2304,14 +2344,34 @@ var AnnotatorUI = (function($, window, undefined) {
         } else {
           console.error('Unrecognized type category:', category);
         }
+	// HERE: this adds the attribute divs
         $.each(attributeTypes, function(attrNo, attr) {
           var $input = $('#'+category+'_attr_'+Util.escapeQuotes(attr.type));
           if (attr.bool) {
             attributes[attr.type] = $input[0].checked;
           } else if ($input[0].selectedIndex) {
+	    console.log('spanAttributes', $input.val(), attr.type); 
             attributes[attr.type] = $input.val();
+	    console.log('spanAttributes', attributes); 
           }
         });
+	// FIXME: This is a bit nasty!
+	// This saves things but does not associate with an event so gets lost? 
+	// TODO: Check if we're actually in the callhome state
+	//if (category == 'entity') {
+	//	attributeTypes = eventAttributeTypes;
+	//	$.each(attributeTypes, function(attrNo, attr) {
+	//	  var $input = $('#entity2_attr_'+Util.escapeQuotes(attr.type));
+	//	  if (attr.bool) {
+	//	    attributes[attr.type] = $input[0].checked;
+	//	  } else if ($input[0].selectedIndex) {
+	//	    console.log('spanAttributes', $input.val(), attr.type); 
+	//	    attributes[attr.type] = $input.val();
+	//	    console.log('spanAttributes', attributes); 
+	//	    console.log('spanAttributes', $input); 
+	//	  }
+	//	});
+        //}
         return attributes;
       }
 
@@ -2321,7 +2381,10 @@ var AnnotatorUI = (function($, window, undefined) {
                                                  _relationTypesHash) {
         spanTypes = _spanTypes;
         entityAttributeTypes = _entityAttributeTypes;
+	// HERE!!!!
         eventAttributeTypes = _eventAttributeTypes;
+        //eventAttributeTypes = _eventAttributeTypes;
+	//console.log("+++", eventAttributeTypes);
         relationTypesHash = _relationTypesHash;
       };
 
