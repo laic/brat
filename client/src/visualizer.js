@@ -3134,7 +3134,8 @@ Util.profileStart('before render');
           var span = data.spans[id];
           dispatcher.post('displaySpanComment', [
               evt, target, id, span.type, span.attributeText,
-              span.text,
+              //span.text,
+							'...',
               span.comment && span.comment.text,
               span.comment && span.comment.type,
               span.normalizations]);

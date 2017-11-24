@@ -2004,7 +2004,6 @@ var AnnotatorUI = (function($, window, undefined) {
       var addAttributeTypesToDiv = function($top, types, category) {
 
 	console.log("attr types", category, types)
-
         $.each(types, function(attrNo, attr) {
           var escapedType = Util.escapeQuotes(attr.type);
           var attrId = category+'_attr_'+escapedType;
