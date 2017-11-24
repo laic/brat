@@ -60,7 +60,7 @@ def _refine_split(offsets, original_text):
     # Postprocessor expects newlines, so add. Also, replace
     # sentence-internal newlines with spaces not to confuse it.
     new_text = '\n'.join((original_text[o[0]:o[1]].replace('\n', ' ')
-            for o in offsets))
+            for o, fw in offsets))
 
     from sspostproc import refine_split
     output = refine_split(new_text)
@@ -139,9 +139,9 @@ def _sentence_boundary_gen(text, regex, turntimes=True):
         	yield mspan, [0.0,1.0] 
 	
 
-def regex_sentence_boundary_gen(text):
+def regex_sentence_boundary_gen(text, turntimes=True):
     for o in _refine_split([_o for _o in _sentence_boundary_gen(
-                text, SENTENCE_END_REGEX)], text):
+                text, SENTENCE_END_REGEX, turntimes=turntimes)], text):
         yield o
 
 def newline_sentence_boundary_gen(text, turntimes=True):
