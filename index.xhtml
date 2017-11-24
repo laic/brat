@@ -609,7 +609,7 @@
       <fieldset id="span_selected_fset">
         <legend>Text</legend>
         <a target="brat_linked" id="span_highlight_link" href="#">Link</a>
-        <div id="span_selected"/>
+        <div id="span_selected" class="scroll_text"/>
       </fieldset>
       <!-- Span dialog search links -->
       <fieldset id="span_search_fieldset">
@@ -620,7 +620,7 @@
       <fieldset>
         <div id="entity_and_event_wrapper" class="split_wrapper">
           <div id="span_entity_section" class="wrapper_half_left">
-            <div id="entity_label" class="label-like">Entity type</div>
+            <div id="entity_label" class="label-like">Segment type</div>
             <div id="entity_types" class="scroll_wrapper_upper">
               <div class="scroller"/>
             </div>
@@ -628,17 +628,19 @@
                  divs they logically belong to prevent scrollers
                  overflowing them. -->
             <div id="entity_attribute_label"
-                 class="label-like wrapper_lower_label">Entity attributes</div>
+                 class="label-like wrapper_lower_label">A attributes</div>
             <div id="entity_attributes" class="scroll_wrapper_lower">
               <div class="scroller small-buttons"/>
             </div>
+
           </div><div id="span_event_section" class="wrapper_half_right">
-            <div id="event_label" class="label-like">Event type</div>
+            <!--<div id="event_label" class="label-like">Event type</div>-->
+            <div id="event_label" class="label-like">&nbsp;</div>
             <div id="event_types" class="scroll_wrapper_upper">
               <div class="scroller"/>
             </div>
             <div id="event_attribute_label"
-                 class="wrapper_lower_label label-like">Event attributes</div>
+                 class="wrapper_lower_label label-like">B attributes</div>
             <div id="event_attributes" class="scroll_wrapper_lower">
               <div class="scroller small-buttons"/>
             </div>
