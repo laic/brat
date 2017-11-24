@@ -2759,6 +2759,7 @@ Util.profileStart('rows');
               text = svg.text(link, canvasWidth - sentNumMargin + Configuration.visual.margin.x, y - rowPadding,
                   '' + row.sentence, { 'data-sent': row.sentence, 'sentstart': sentstart, 'sentend': sentend });
             } else {
+	      //console.log('sentstart',sentstart);
               text = svg.text(link, sentNumMargin - Configuration.visual.margin.x, y - rowPadding,
                   '' + row.sentence, { 'data-sent': row.sentence, 'sentstart': sentstart, 'sentend': sentend });
             }
