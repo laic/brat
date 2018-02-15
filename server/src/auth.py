@@ -23,7 +23,7 @@ from config import USER_PASSWORD, DATA_DIR
 from message import Messager
 from session import get_session, invalidate_session
 from projectconfig import ProjectConfiguration
-
+from datetime import datetime
 
 # To raise if the authority to carry out an operation is lacking
 class NotAuthorisedError(ProtocolError):
@@ -81,6 +81,20 @@ def login(user, password):
     get_session()['user'] = user
     Messager.info('Hello!')
     return {}
+
+def compcode(compcode, collection, document):
+	## We want to write the compcode and user somewhere 
+    try:
+        user =  get_session()['user']
+    except KeyError:
+		Messager.warning('Not logged in??')
+		user = 'unknown'
+
+	with open('/afs/inf.ed.ac.uk/web/securepages/clai/web/brat/work/userlog.txt', 'a') as f:
+		f.write("COMPLETION, %s, %s, %s, %s\n" % (str(datetime.now()), user, compcode, collection))
+
+    Messager.info('Thank you! Task completion has been logged!')
+    return {} 
 
 def logout():
     try:

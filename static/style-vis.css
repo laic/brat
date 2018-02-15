@@ -377,6 +377,7 @@ fieldset legend {
 
 #span_selected, #arc_origin, #arc_target {
   font-weight: bold;
+	white-space:pre	
 }
 
 #commentpopup {

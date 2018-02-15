@@ -15,7 +15,7 @@ from os.path import join as path_join
 from annotator import create_arc, delete_arc, reverse_arc
 from annotator import create_span, delete_span
 from annotator import split_span
-from auth import login, logout, whoami, NotAuthorisedError
+from auth import login, logout, whoami, NotAuthorisedError, compcode
 from common import ProtocolError
 from config import DATA_DIR
 from convert.convert import convert
@@ -59,6 +59,7 @@ DISPATCHER = {
         'login': login,
         'logout': logout,
         'whoami': whoami,
+        'compcode': compcode,
 
         'createSpan': create_span,
         'deleteSpan': delete_span,
@@ -118,6 +119,7 @@ ANNOTATION_ACTION = set((
 # Actions that will be logged as annotator actions (if so configured)
 LOGGED_ANNOTATOR_ACTION = ANNOTATION_ACTION | set((
         'getDocument',
+		'compcode',
         'logAnnotatorAction',
         ))
 

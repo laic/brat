@@ -830,6 +830,7 @@ def _document_json_dict(document):
 
     #TODO: We don't check if the files exist, let's be more error friendly
     # Read in the textual data to make it ready to push
+
     _enrich_json_with_text(j_dic, document + '.' + TEXT_FILE_SUFFIX)
 
     with TextAnnotations(document) as ann_obj:
