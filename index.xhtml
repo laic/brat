@@ -4,7 +4,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="en-US" xml:lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <title>brat</title>
+    <title>Topic and Stance Annotation in Brat</title>
     <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8"/>
     <meta name="google" value="notranslate"/>
     <link href="static/jquery-theme/jquery-ui.css" rel="stylesheet" type="text/css"/>
@@ -122,18 +122,19 @@
         <div id="pulldown_padder">
           <div>
             <input id="auth_button" type="button" value="Login"/>
-            <input id="collection_browser_button" type="button" value="Collection" tabindex="-1" title="Open Collection Browser (Tab)"/>
-            <input id="data_button" type="button" value="Data" tabindex="-1" title="Import, Export Data; Manage Collection"/>
+            <!-- <input id="collection_browser_button" type="button" value="Collection" tabindex="-1" title="Open Collection Browser (Tab)"/> -->
+            <!-- <input id="data_button" type="button" value="Data" tabindex="-1" title="Import, Export Data; Manage Collection"/> -->
             <input id="search_button" type="checkbox" class="login" value="true" tabindex="-1"/><label id="search_button_label" for="search_button" title="Search text and annotations">Search</label><input id="clear_search_button" type="button" value="✕" tabindex="-1" title="Clear search" style="display: none"/>
             <input id="unlock_type_button" type="button" value="Unlock" tabindex="-1" title="Stop annotating with the locked type"/>
+            <input id="complete_button" type="button" value="Completion" tabindex="-1" title="Get Completion Code"/>
             <!--<input id="undo_button" type="button" class="login" value="Undo" tabindex="-1"/>-->
-            <input id="options_button" type="button" value="Options" tabindex="-1" title="Set Visual, Annotation and Network Options"/>
+            <!--<input id="options_button" type="button" value="Options" tabindex="-1" title="Set Visual, Annotation and Network Options"/>-->
           </div>
 
 					<div id="audio_name">
 						<!-- we get an error here SimpleHTTPServer, apparently it's ok with apache -->
 						<audio id="audio_player" controls="controls" style="width: 100%">
-							<source id="srcaudio" src="" type="audio/mpeg">Your browser is bad!</source>
+							<source id="srcaudio" src="" type="audio/mpeg">Your browser is cannot play mp3 files</source>
 						</audio>
 						<br/>
 						<input readonly="readonly" class="ui-widget-header"/>
@@ -142,7 +143,8 @@
           <!-- Dummy span, fixes visual glitch (issue #535). TODO: better fix -->
           <span class="document_edit_time unselectable">&nbsp;</span>
           <div id="document_mtime" class="document_edit_time unselectable">&nbsp;</div>
-          <a id="help_link" target="manual" href="http://brat.nlplab.org/manual.html">Help <img src="static/img/Fugue-shadowless-question.png"/></a>
+          <a id="instructions_link" target="_blank" href="../instructions.html">Annotation Instructions<img src="static/img/Fugue-shadowless-question.png"/></a>
+          <!-- <a id="help_link" target="manual" href="http://brat.nlplab.org/manual.html">Help <img src="static/img/Fugue-shadowless-question.png"/></a> -->
         </div>
       </div>
     </div>
@@ -164,6 +166,7 @@
       </fieldset>
     </form>
     <!-- Data dialog -->
+            <!--<input id="complete_button" type="button" value="Completion" tabindex="-1" title="Get Completion Code"/>-->
     <form id="data_form" class="dialog" title="Data">
       <!-- Data dialog export section -->
       <fieldset class="small-buttons">
@@ -241,11 +244,11 @@
           <legend>Delete</legend>
           <div class="optionRow">
             <span class="optionLabel">Current document</span>
-            <input id="delete_document_button" type="button" class="login ui-button-text" value="Delete document" tabindex="-1" title="Permanently remove the current document and its annotations from the collection."/>
+            <!-- <input id="delete_document_button" type="button" class="login ui-button-text" value="Delete document" tabindex="-1" title="Permanently remove the current document and its annotations from the collection."/> -->
           </div>
           <div class="optionRow">
             <span class="optionLabel">Current collection</span>
-            <input id="delete_collection_button" type="button" class="login ui-button-text" value="Delete collection" tabindex="-1" title="Permanently remove the entire current collection and all documents in it."/>
+            <!-- <input id="delete_collection_button" type="button" class="login ui-button-text" value="Delete collection" tabindex="-1" title="Permanently remove the entire current collection and all documents in it."/> --> -->
           </div>
         </fieldset>
       </div>
@@ -628,7 +631,7 @@
                  divs they logically belong to prevent scrollers
                  overflowing them. -->
             <div id="entity_attribute_label"
-                 class="label-like wrapper_lower_label">Stance: How does each speaker seem in this segment?</div>
+                 class="label-like wrapper_lower_label">Attitude/stance: How does each speaker seem in this segment?</div>
             <div id="entity_attributes" class="scroll_wrapper_lower">
               <div class="scroller small-buttons"/>
             </div>
@@ -731,6 +734,17 @@
         <input id="auth_pass" type="password" placeholder="Password" class="borderless"/>
       </fieldset>
     </form>
+
+	  <!-- completion dialog?? -->
+    <form id="complete_form" class="dialog" title="Completion">
+		 <p>Thank you! Please enter the following code on AMT</p>
+      <fieldset>
+        <legend>Code</legend>
+        <input id="comp_code" placeholder="XXX" class="borderless"/>
+      </fieldset>
+    </form>
+
+
     <!-- Split span annotation dialog -->
     <form id="split_form" class="dialog" title="Split the Span">
       <fieldset>
@@ -791,11 +805,11 @@
       <div id="copyright">&copy; 2010-2012 The brat contributors</div>
     </div>
     <!-- Welcome/tutorial dialog -->
-    <div id="tutorial" class="dialog unselectable" title="Tutorial">
+    <div id="tutorial" class="dialog unselectable" title="Topic and Stance Annotation in Brat">
       <h2>Welcome to the brat annotation tool!</h2>
       <div id="browserwarning">
         <p>
-        Please be aware that
+        Please be aware that brat
         <span class="logo">brat</span>
         is currently only fully supported on
         <a href="http://www.google.com/chrome">Google Chrome</a>
@@ -812,65 +826,14 @@
           a fully supported browser for a better user experience.
         </p>
       </div>
-      <p>Below is a mini-tutorial for basic usage. For detailed
-        instructions, please see
-        the <a href="http://brat.nlplab.org/manual.html" target="manual">brat
-        user manual</a>.</p>
-      <h3>Selecting a document</h3>
-      <p>After closing this tutorial, you will see the collection
-        browser, which allows you to access the different text
-        collections and individual documents in those collections on
-        your brat installation. Simply double-click on a collection
-        name to show its contents or on a document name to open it.
-      </p>
-      <p>You can later return to the collection browser by pressing the
-        TAB key or by clicking on &quot;Collection&quot; in the menu.
-      </p>
-      <h3>Visualization</h3>
-      <p>When a document is selected, the main window area shows a
-        visualization of the text and annotations of that
-        document. Placing the mouse cursor over an annotation shows
-        further information about that annotation.
-      </p>
-      <h3>Menu</h3>
-      <p>Placing the mouse cursor over the blue bar on top of the
-        window opens the tool menu. This provides access to the
-        following features:
-        <ul>
-          <li><b>Collection</b>: collection browser</li>
-          <li><b>Data</b>: export annotation data</li>
-          <li><b>Search</b>: search current document or collection</li>
-          <li><b>Options</b>: system configuration options</li>
-          <li><b>Login</b>: log in for editing</li>
-        </ul>
-      </p>
-      <h3>Basic editing</h3>
-      <p>When logged in (from the menu), it is possible to add
-        annotations for a text span simply by selecting that span with
-        the mouse, either by &quot;dragging&quot; over the text or by
-        double-clicking on a word.
-      </p>
-      <p>After selecting a span, the system shows the annotation dialog.
-        This allows the selection of the type to assign to the newly
-        created annotation, as well as the addition of comments or
-        setting additional aspects of the annotation.
-      </p>
-      <p>Associations between annotated text spans can be annotated by
-        &quot;dragging&quot; with the mouse from one annotation to the
-        other. This again brings up a dialog for selecting the type of
-        the annotation.
-      </p>
-      <p>Existing annotations can be modified or deleted from the same
-        annotation dialog, which can be brought up by double-clicking
-        on an annotation.
-      </p>
-      <p>(The available annotation types and other aspects depend on the
-        configuration of each collection.)
-      </p>
-      <h3>Advanced usage</h3>
-      <p>Please see the <a href="http://brat.nlplab.org/manual.html">brat user
-          manual</a> for more!
-      </p>
+			<p>
+			 You can find instructions for this task and more about how to use the annotation tool 
+       <a id="instructions_linkx" target="_blank" href="instructions.html">here</a>
+			 </p>
+			 <p>
+			 Note, you'll need to login to brat to make annotations!  Hovering over the blue bar at the top of 
+			 the window will show a menu with a login button.
+			 </p>
     </div>
   </body>
 </html>

@@ -114,7 +114,7 @@ var AnnotatorUI = (function($, window, undefined) {
       var onKeyDown = function(evt) {
         var code = evt.which;
 
-	if (code === $.ui.keyCode.TAB) {
+	if (code === $.ui.keyCode.ENTER) {
 		var audioplayer = $('#audio_player')[0];
 		console.log("audio", audioplayer.paused);
 		if(!audioplayer.paused) {
@@ -267,7 +267,9 @@ var AnnotatorUI = (function($, window, undefined) {
             spanFormSubmit();
             dispatcher.post('logAction', ['spanLockEditSubmitted']);
           } else {
-            fillSpanTypesAndDisplayForm(evt, editedSpan.text, editedSpan);
+						//console.log("editedSpan");
+						//console.log(editedSpan.text.replace(/([0-9]+[.][0-9]+ [0-9]+[.][0-9]+)/g, '\r\n\$1'));
+            fillSpanTypesAndDisplayForm(evt, editedSpan.text.replace(/([0-9]+[.][0-9]+ [0-9]+[.][0-9]+)/g, '\r\n\$1'), editedSpan);
             // for precise timing, log annotation display to user.
             dispatcher.post('logAction', ['spanEditSelected']);
           }
@@ -708,7 +710,10 @@ var AnnotatorUI = (function($, window, undefined) {
         }
 
         $('#span_selected').text(spanText);
+				//console.log("span_selected");
+				//console.log(spanText);
         var encodedText = encodeURIComponent(spanText);       
+				//console.log(encodedText)
         $.each(searchConfig, function(searchNo, search) {
           $('#span_'+search[0]).attr('href', search[1].replace('%s', encodedText));
         });
@@ -776,6 +781,7 @@ var AnnotatorUI = (function($, window, undefined) {
         $('#span_highlight_link').attr('href', linkHash);
         if (span && !reselectedSpan) {
           $('#span_form_reselect, #span_form_delete, #span_form_add_fragment').show();
+          //$('#span_form_reselect, #span_form_delete, #span_form_add_fragment').hide();
           keymap[$.ui.keyCode.DELETE] = 'span_form_delete';
           keymap[$.ui.keyCode.INSERT] = 'span_form_reselect';
           keymap['S-' + $.ui.keyCode.ENTER] = 'span_form_add_fragment';
@@ -788,6 +794,7 @@ var AnnotatorUI = (function($, window, undefined) {
         }
         if (span && !reselectedSpan && span.offsets.length > 1) {
           $('#span_form_reselect_fragment, #span_form_delete_fragment').show();
+          //$('#span_form_reselect_fragment, #span_form_delete_fragment').hide();
           keymap['S-' + $.ui.keyCode.DELETE] = 'span_form_delete_fragment';
           keymap['S-' + $.ui.keyCode.INSERT] = 'span_form_reselect_fragment';
         } else {
@@ -1786,6 +1793,7 @@ var AnnotatorUI = (function($, window, undefined) {
             // normal span select in standard annotation mode
             // or reselect: show selector
             var spanText = data.text.substring(selectedFrom, selectedTo);
+            //console.log(spanText);
             fillSpanTypesAndDisplayForm(evt, spanText, reselectedSpan);
             // for precise timing, log annotation display to user.
             dispatcher.post('logAction', ['spanSelected']);
@@ -1930,12 +1938,12 @@ var AnnotatorUI = (function($, window, undefined) {
 
       var addSpanTypesToDivInner = function($parent, types, category) {
         if (!types) {
-		console.log("No types", category)
+		//console.log("No types", category)
 		return;
 	}
-	console.log("types", category, types)
+	//console.log("types", category, types)
         $.each(types, function(typeNo, type) {
-	  console.log("Adding types", category)
+	  //console.log("Adding types", category)
           if (type === null) {
             $parent.append('<hr/>');
           } else {
@@ -2003,17 +2011,17 @@ var AnnotatorUI = (function($, window, undefined) {
       };
       var addAttributeTypesToDiv = function($top, types, category) {
 
-	console.log("attr types", category, types)
+	//console.log("attr types", category, types)
         $.each(types, function(attrNo, attr) {
           var escapedType = Util.escapeQuotes(attr.type);
           var attrId = category+'_attr_'+escapedType;
-	  console.log('attrId', attrId)
+	  //console.log('attrId', attrId)
           var $span = $('<span class="attribute_type_label"/>').appendTo($top);
           if (attr.unused) {
-	    console.log('attr.unused')
+	   // console.log('attr.unused')
             $('<input type="hidden" id="'+attrId+'" value=""/>').appendTo($span);
           } else if (attr.bool) {
-	    console.log('attr.bool')
+	    //console.log('attr.bool')
             var escapedName = Util.escapeQuotes(attr.name);
             var $input = $('<input type="checkbox" id="'+attrId+
                            '" value="' + escapedType + 
@@ -2036,7 +2044,7 @@ var AnnotatorUI = (function($, window, undefined) {
             $select.append($option);
             $.each(attr.values, function(valueNo, value) {
 	      valname  = value.name.replace("_", " ");
-	      console.log("attrname", attrname, valname);
+	      //console.log("attrname", attrname, valname);
               $option = $('<option class="ui-state-active" value="' + Util.escapeQuotes(valname) + '"/>').text(valname);
               $select.append($option);
             });
@@ -2097,7 +2105,7 @@ var AnnotatorUI = (function($, window, undefined) {
       var onBooleanAttrChange = function(evt) {
         if (evt.type == 'change') { // ignore the click event on the UI element
           var attrCategory = evt.target.getAttribute('category');
-	  console.log('onBooleanAttrChange', attrCategory);
+	  //console.log('onBooleanAttrChange', attrCategory);
           setSpanTypeSelectability(attrCategory);
           updateCheckbox($(evt.target));
         }
@@ -2110,18 +2118,18 @@ var AnnotatorUI = (function($, window, undefined) {
 
         // fill in entity and event types
         var $entityScroller = $('#entity_types div.scroller').empty();
-	console.log('add entities')
+	//console.log('add entities')
         addSpanTypesToDivInner($entityScroller, response.entity_types, 'entity');
         var $eventScroller = $('#event_types div.scroller').empty();
-	console.log('add events')
+	//console.log('add events')
         addSpanTypesToDivInner($eventScroller, response.event_types, 'event');
 
         // fill in attributes
-	console.log('add entities attr')
+	//console.log('add entities attr')
         var $entattrs = $('#entity_attributes div.scroller').empty();
         addAttributeTypesToDiv($entattrs, entityAttributeTypes, 'entity');
 
-	console.log('add event attrs')
+	//console.log('add event attrs')
         var $eveattrs = $('#event_attributes div.scroller').empty();
         addAttributeTypesToDiv($eveattrs, eventAttributeTypes, 'event');
 	//eventAttributeTypes = entityAttributeTypes;
@@ -2349,9 +2357,9 @@ var AnnotatorUI = (function($, window, undefined) {
           if (attr.bool) {
             attributes[attr.type] = $input[0].checked;
           } else if ($input[0].selectedIndex) {
-	    console.log('spanAttributes', $input.val(), attr.type); 
+	    //console.log('spanAttributes', $input.val(), attr.type); 
             attributes[attr.type] = $input.val();
-	    console.log('spanAttributes', attributes); 
+	    //console.log('spanAttributes', attributes); 
           }
         });
 	// FIXME: This is a bit nasty!
@@ -2558,27 +2566,30 @@ var AnnotatorUI = (function($, window, undefined) {
       dispatcher.post('initForm', [spanForm, {
           alsoResize: '#entity_and_event_wrapper',
           width: 760,
-          buttons: [{
-              id: 'span_form_add_fragment',
-              text: "Add Frag.",
-              click: addFragment
-            }, {
+          buttons: [
+					   //{
+             // id: 'span_form_add_fragment',
+             // text: "Add Frag.",
+             // click: addFragment
+           // }, 
+						{
               id: 'span_form_delete',
               text: "Delete",
               click: deleteSpan
-            }, {
-              id: 'span_form_delete_fragment',
-              text: "Delete Frag.",
-              click: deleteFragment
-            }, {
-              id: 'span_form_reselect',
-              text: 'Move',
-              click: reselectSpan
-            }, {
-              id: 'span_form_reselect_fragment',
-              text: 'Move Frag.',
-              click: reselectFragment
-            }, {
+            }, //{
+              //id: 'span_form_delete_fragment',
+              //text: "Delete Frag.",
+              //click: deleteFragment
+            //}, {
+            //  id: 'span_form_reselect',
+            //  text: 'Move',
+            //  click: reselectSpan
+            //}, {
+            //  id: 'span_form_reselect_fragment',
+            //  text: 'Move Frag.',
+            //  click: reselectFragment
+            //}, 
+				     {
               id: 'span_form_split',
               text: 'Split',
               click: splitSpan

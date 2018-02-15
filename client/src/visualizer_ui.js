@@ -1476,25 +1476,14 @@ var VisualizerUI = (function($, window, undefined) {
       /* END "more collection information" dialog - related */
 
 
+      /* START instructions - todo*/
+      //$('#instructions_button').click(function() {
+			//			console.log("instructions");
+      //});
+
       var onKeyDown = function(evt) {
         var code = evt.which;
 				
-				// TAB to stop and start audio
-       // if (code === $.ui.keyCode.TAB) {
-				//	var audioplayer = $('#audio_player')[0];
-			//		console.log("audio", audioplayer.paused);
-			//		if(!audioplayer.paused) {
-			//			console.log("pause audio now");
-			//			audioplayer.pause();
-			//		} else { 
-			//			console.log("play now");
-			//			audioplayer.play();
-			//		}
-
-       //   //dispatcher.post('messages', [false]);
-       //   return;
-       // }
-
         if (currentForm) {
           if (code === $.ui.keyCode.ENTER) {
             // don't trigger submit in textareas to allow multiline text
@@ -1788,9 +1777,13 @@ var VisualizerUI = (function($, window, undefined) {
         var audioname = $audioname[0];
 
         var audioplayer = $('#audio_player');
-				$('#srcaudio').attr("src", "data" +coll + doc + ".mp3");
-			  audioplayer.load()
-
+			  console.log("coll:", coll, "doc:", doc);
+				if (doc != "" && !doc.includes(".unique")) { 
+				   $('#srcaudio').attr("src", "data" +coll + doc + ".mp3");
+					 audioplayer.load();
+		    }	else {
+					console.log("doc:", doc);
+				}
 
         $('#document_mtime').hide();
         invalidateSavedSVG();
@@ -2007,6 +2000,54 @@ var VisualizerUI = (function($, window, undefined) {
         }
       });
       authForm.submit(authFormSubmit);
+
+			var randomString = function(length) {
+					var randomtext = "";
+						var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+							for(var i = 0; i < length; i++) {
+											randomtext += possible.charAt(Math.floor(Math.random() * possible.length));
+												}
+								return randomtext;
+			}	
+
+      var completeForm = $('#complete_form');
+			compcode = randomString(10) 
+			$('#comp_code').val(compcode);
+			$('#comp_code').prop('disabled',true);
+      initForm(completeForm, { resizable: false });
+      var completeFormSubmit = function(evt) {
+        dispatcher.post('hideForm');
+        //var _user = $('#complete_user').val();
+        //var password = $('#complete_pass').val();
+				// We should post something to the server here to mark the event
+				// username and code?
+				//
+				//var $comp_code = $('#comp_code').val(compcode);
+				console.log("post:" + compcode)
+				console.log("user:" + user)
+
+        dispatcher.post('ajax', [{
+            action: 'compcode',
+            compcode: compcode,
+						collection: coll, 
+						document: doc
+          },
+          function(response) {
+              if (response.exception) {
+                dispatcher.post('showForm', [completeForm]);
+                $('#complete_user').select().focus();
+              } else {
+                $('#complete_button').val('Done! ' + user);
+              }
+          }]);
+        return false;
+      };
+      $('#complete_button').click(function(evt) {
+				console.log("complete");
+        dispatcher.post('showForm', [completeForm]);
+      });
+      completeForm.submit(completeFormSubmit);
+
 
 
       var tutorialForm = $('#tutorial');

@@ -1066,8 +1066,9 @@ var Visualizer = (function($, window, undefined) {
               });
             }
             if (warning) {
-              svgtext.span("#", { 'class': 'glyph attribute_warning' });
-              text += ' #';
+							//console.log("HERE#")
+              //svgtext.span("#", { 'class': 'glyph attribute_warning' });
+              //text += ' #';
             }
             fragment.glyphedLabelText = text;
 

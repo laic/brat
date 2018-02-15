@@ -1077,6 +1077,13 @@ class TextAnnotations(Annotations):
             reftext = DISCONT_SEP.join(spantexts)
 
             if text != reftext:
+				#if text == reftext.replace('\n',''):
+				#	Messenger.warning("SAME")
+				#else:
+					#Messenger.error((u'%s \n %s \n') % (repr(text), repr(text))
+					#Messenger.warning("diff")
+					
+
                 # just in case someone has been running an old version of
                 # discont that catenated spans without DISCONT_SEP
                 oldstylereftext = ''.join(spantexts)
@@ -1086,9 +1093,10 @@ class TextAnnotations(Annotations):
                     data_tail = ''
                 else:
                     # unanticipated mismatch
-                    Messager.error((u'Text-bound annotation text "%s" does not '
-                                    u'match marked span(s) %s text "%s" in document') % (
-                            text, str(spans), reftext.replace('\n','\\n')))
+					testref = reftext.replace('\n', '')
+                    Messager.error((u'Text-bound annotation text \n"%s" \ndoes not '
+                                    u'match marked span(s) %s text \n"%s" \nin document \n %s \n %s') % (
+                            repr(text), str(spans), reftext.replace('\n','\\n'), repr(testref), str(text==testref)))
                     raise IdedAnnotationLineSyntaxError(id, self.ann_line, self.ann_line_num+1, input_file_path)
 
             if data_tail != '' and not data_tail[0].isspace():
