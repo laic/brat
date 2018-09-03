@@ -1,4 +1,4 @@
-# brat rapid annotation tool (brat) with audio#
+# brat rapid annotation tool (brat) with audio #
 
 This is a modified version of the annotation tool brat. The modifications
 enable audio playback in the annotation interface.  You can control the 
