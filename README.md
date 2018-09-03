@@ -1,4 +1,13 @@
-# brat rapid annotation tool (brat) #
+# brat rapid annotation tool (brat) with audio#
+
+This is a modified version of the annotation tool brat. The modifications
+enable audio playback in the annotation interface.  You can control the 
+audio player in the drop down menu.  You can also play from a specific
+line in the transcript by double clicking on the line number. You 
+will need to be logged into brat to get this to work.  
+
+
+The readme info for brat is below:
 
 ## Documentation ##
 
